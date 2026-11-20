@@ -51,3 +51,6 @@ CoqMakefile.conf
 
 # audit build output
 audit/_out/
+
+# fetched by tools/st4/fetch.sh
+tools/st4/lib/

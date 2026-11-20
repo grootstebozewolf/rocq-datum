@@ -5,9 +5,11 @@
 #   Fixture.v           installed as theories/Fixture.v (Datum.Fixture)
 #   ledger.src          replaces audit/ledger.src
 #   exceptions.tsv      optional; replaces audit/exceptions.tsv
-#   base_counts.tsv     optional; baseline for the ratchet step
-#   expect              pass | fail-emit | fail-compile | fail-report | fail-ratchet
+#   base_ledger.tsv     optional; baseline ledger.tsv for the ratchet step
+#   expect              pass | fail-emit | fail-compile | fail-report | fail-render | fail-ratchet
 #   expect.ledger.tsv   optional; exact expected audit/ledger.tsv
+#   expect.LEDGER.md    optional; exact expected audit/LEDGER.md
+#   expect.msg          optional; text that must appear in the step output
 #
 # The case runs in a scratch copy of the repository and the first failing
 # step is compared against `expect`.
@@ -22,7 +24,7 @@ for case in "$here"/cases/*/; do
   name=$(basename "$case")
   expect=$(cat "$case/expect")
   tmp=$(mktemp -d)
-  cp -r "$root/theories" "$root/audit" "$root/_CoqProject" "$root/Makefile" "$tmp/"
+  cp -r "$root/theories" "$root/audit" "$root/templates" "$root/tools" "$root/_CoqProject" "$root/Makefile" "$tmp/"
   rm -rf "$tmp/audit/_out"
   cp "$case/Fixture.v" "$tmp/theories/Fixture.v"
   echo "theories/Fixture.v" >> "$tmp/_CoqProject"
@@ -36,15 +38,25 @@ for case in "$here"/cases/*/; do
   run() { (cd "$tmp" && "$@") >>"$log" 2>&1; }
   run make -s all || got=fail-build
   [ "$got" = pass ] && { run python3 audit/ledger.py emit || got=fail-emit; }
-  [ "$got" = pass ] && { run mkdir -p audit/_out; run rocq compile -R theories Datum -Q audit DatumAudit audit/Ledger.v || got=fail-compile; }
+  [ "$got" = pass ] && { run mkdir -p audit/_out; run rocq compile -output-directory . -R theories Datum -Q audit DatumAudit audit/Ledger.v || got=fail-compile; }
   [ "$got" = pass ] && { run python3 audit/ledger.py report || got=fail-report; }
-  if [ "$got" = pass ] && [ -f "$case/base_counts.tsv" ]; then
-    run python3 audit/ledger.py ratchet "$case/base_counts.tsv" || got=fail-ratchet
+  if [ "$got" = pass ] && [ -f "$case/base_ledger.tsv" ]; then
+    run python3 audit/ledger.py ratchet "$case/base_ledger.tsv" || got=fail-ratchet
   fi
+  [ "$got" = pass ] && { run make -s docs || got=fail-render; }
   if [ "$got" = pass ] && [ -f "$case/expect.ledger.tsv" ]; then
     if ! diff -u "$case/expect.ledger.tsv" "$tmp/audit/ledger.tsv" >>"$log"; then
       got=wrong-ledger
     fi
+  fi
+  if [ "$got" = pass ] && [ -f "$case/expect.LEDGER.md" ]; then
+    if ! diff -u "$case/expect.LEDGER.md" "$tmp/audit/LEDGER.md" >>"$log"; then
+      got=wrong-markdown
+    fi
+  fi
+
+  if [ "$got" = "$expect" ] && [ -f "$case/expect.msg" ]; then
+    grep -qF -- "$(cat "$case/expect.msg")" "$log" || got="$got (wrong message)"
   fi
 
   if [ "$got" = "$expect" ]; then

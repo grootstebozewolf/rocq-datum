@@ -12,5 +12,8 @@ Lemma double_even (n : nat) : is_even (2 * n).
 Proof. unfold is_even. rewrite Nat.even_mul. reflexivity. Qed.
 
 (* Claim: every natural number is zero.  Refuted, no repair yet. *)
-Definition all_zero_cex : Counterexample (fun n : nat => n = 0) :=
-  by_check (Nat.eqb 0) (fun y H => eq_ind_r (fun z => Nat.eqb 0 z = true) eq_refl H) 1 eq_refl.
+Definition all_zero_cex : Counterexample (fun n : nat => n = 0).
+Proof.
+  refine (by_check (Nat.eqb 0) _ 1 eq_refl).
+  intros y H. subst y. reflexivity.
+Defined.

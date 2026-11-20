@@ -1,3 +1,4 @@
+<!-- GENERATED from audit/ledger.tsv by tools/st4/Render.java and templates/readme.stg. Do not edit; edit the template. -->
 # rocq-datum
 
 Foundational Rocq lemmas for verified computational geometry: pure-ℝ facts, ℝ↔floating-point bridges, and rounding-error bounds.
@@ -5,6 +6,12 @@ Foundational Rocq lemmas for verified computational geometry: pure-ℝ facts, �
 ```coq
 From Datum Require Import Real.Base.
 ```
+
+## Ledger
+
+1 QED (positive results) · 0 QEX (Qed-closed counterexamples, 0 open).
+Per-level counts, tiers and assumptions: [`audit/LEDGER.md`](audit/LEDGER.md).
+All figures are generated from [`audit/ledger.tsv`](audit/ledger.tsv).
 
 ## Assumptions
 
@@ -15,4 +22,14 @@ Importing `Stdlib.Reals` brings four axioms into the closure:
 - `Stdlib.Reals.ClassicalDedekindReals.sig_not_dec`
 - `Stdlib.Logic.FunctionalExtensionality.functional_extensionality_dep`
 
-This is a fact about the import closure, not a choice made by Datum. Datum states no theorems yet; per-theorem assumptions are reported per lemma (`Print Assumptions`).
+This is a fact about the import closure, not a choice made by Datum (checked with `rocqchk -o Stdlib.Reals.Reals` on Rocq 9.0.0, rocq-stdlib 9.1.0). Per-theorem assumptions are reported per ledger entry (`Print Assumptions`), with tiers:
+
+- **Tier 0**: closed under the global context.
+- **Tier 1**: only the Reals construction axioms in `audit/allowlist.txt`.
+- **Tier 2**: additionally an axiom registered for that theorem in `audit/exceptions.tsv` (intended for `classic`). Never allowed for QEX entries.
+
+## Audit
+
+- `audit/ledger.src`: hand-written ledger rows (`name level kind repairs`).
+- `make audit`: kernel-checks the ledger via the generated `audit/Ledger.v` (QEX entries must inhabit `Datum.Ledger.Core.Counterexample`; repairs must be QED rows), applies the tier policy, writes `audit/ledger.tsv`, and renders `audit/LEDGER.md` and this README with StringTemplate 4 (`templates/*.stg`).
+- `make test-ledger`: self-test of the audit gates (`tests/ledger/`).

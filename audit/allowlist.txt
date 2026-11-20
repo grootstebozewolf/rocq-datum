@@ -1,0 +1,10 @@
+# Tier-1 axioms: the Reals construction axioms, as printed by
+# Print Assumptions in audit/Ledger.v.  classic is deliberately absent;
+# a QED theorem may use it only through an "axiom" row in
+# audit/exceptions.tsv (Tier 2), and a QEX entry never.
+#
+# rocqchk -o Stdlib.Reals.Reals (Rocq 9.0.0, rocq-stdlib 9.1.0) reports
+# exactly these three plus Stdlib.Logic.Classical_Prop.classic.
+ClassicalDedekindReals.sig_forall_dec
+ClassicalDedekindReals.sig_not_dec
+FunctionalExtensionality.functional_extensionality_dep

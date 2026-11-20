@@ -1,0 +1,7 @@
+# Registered exceptions. Tab-separated: kind	subject	detail	justification
+#   axiom	<QED theorem>	<axiom name as printed>	<why it is needed>
+#     Allows one axiom outside audit/allowlist.txt for one QED theorem
+#     (Tier 2). Intended for classic only. Never applies to QEX entries.
+#   ratchet	<Level>/<Kind>	<new count>	<why the count dropped>
+#     Allows a QED or QEX count to fall to exactly <new count>.
+axiom	Datum.Fixture.lem	Classical_Prop.classic	fixture: Tier-2 path

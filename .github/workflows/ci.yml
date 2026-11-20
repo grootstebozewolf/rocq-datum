@@ -7,6 +7,7 @@ on:
 
 env:
   ROCQ_VERSION: 9.0.0
+  ROCQ_STDLIB_VERSION: 9.1.0
 
 jobs:
   build-and-audit:
@@ -27,32 +28,40 @@ jobs:
             rocq-released: https://rocq-prover.org/opam/released
 
       - name: Install Rocq
-        run: opam install -y rocq-core.${ROCQ_VERSION} rocq-stdlib
+        run: opam install -y rocq-core.${ROCQ_VERSION} rocq-stdlib.${ROCQ_STDLIB_VERSION}
+
+      # StringTemplate 4 renders audit/LEDGER.md and README.md.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
 
       - name: Build
         run: opam exec -- make -j2
 
       # Kernel-checks every ledger entry (QEX entries against
-      # Counterexample, repairs and QED names by Check) and applies the
-      # axiom allowlist / tier policy.
+      # Counterexample, repairs and QED names by Check), applies the
+      # axiom allowlist / tier policy, writes audit/ledger.tsv and renders
+      # the Markdown views from it.
       - name: Audit ledger
         run: opam exec -- make audit
 
-      # audit/Ledger.v, ledger.tsv and counts.tsv are generated and
-      # committed: any difference means the ledger was not regenerated.
+      # audit/Ledger.v, audit/ledger.tsv, audit/LEDGER.md and README.md
+      # are generated and committed: any difference means they were not
+      # regenerated with `make audit`.
       - name: Golden diff
         run: |
-          git status --porcelain -- audit
-          git diff --exit-code -- audit
-          test -z "$(git status --porcelain -- audit)"
+          git status --porcelain -- audit README.md
+          git diff --exit-code -- audit README.md
+          test -z "$(git status --porcelain -- audit README.md)"
 
       - name: Counts ratchet
         if: github.event_name == 'pull_request'
         run: |
-          if git show "origin/${{ github.base_ref }}:audit/counts.tsv" > "$RUNNER_TEMP/base-counts.tsv" 2>/dev/null; then
-            python3 audit/ledger.py ratchet "$RUNNER_TEMP/base-counts.tsv"
+          if git show "origin/${{ github.base_ref }}:audit/ledger.tsv" > "$RUNNER_TEMP/base-ledger.tsv" 2>/dev/null; then
+            python3 audit/ledger.py ratchet "$RUNNER_TEMP/base-ledger.tsv"
           else
-            echo "No audit/counts.tsv on ${{ github.base_ref }}; ratchet baseline starts with this PR."
+            echo "No audit/ledger.tsv on ${{ github.base_ref }}; ratchet baseline starts with this PR."
           fi
 
       - name: Audit gate self-test
