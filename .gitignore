@@ -48,3 +48,6 @@ time-of-build-pretty.log
 CoqMakefile
 CoqMakefile.conf
 .CoqMakefile.d
+
+# audit build output
+audit/_out/

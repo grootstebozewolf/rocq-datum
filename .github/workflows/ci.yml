@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  ROCQ_VERSION: 9.0.0
+
+jobs:
+  build-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: System dependencies
+        run: sudo apt-get update && sudo apt-get install -y libgmp-dev
+
+      - uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: 4.14.2
+          opam-repositories: |
+            default: https://github.com/ocaml/opam-repository.git
+            rocq-released: https://rocq-prover.org/opam/released
+
+      - name: Install Rocq
+        run: opam install -y rocq-core.${ROCQ_VERSION} rocq-stdlib
+
+      - name: Build
+        run: opam exec -- make -j2
+
+      # Kernel-checks every ledger entry (QEX entries against
+      # Counterexample, repairs and QED names by Check) and applies the
+      # axiom allowlist / tier policy.
+      - name: Audit ledger
+        run: opam exec -- make audit
+
+      # audit/Ledger.v, ledger.tsv and counts.tsv are generated and
+      # committed: any difference means the ledger was not regenerated.
+      - name: Golden diff
+        run: |
+          git status --porcelain -- audit
+          git diff --exit-code -- audit
+          test -z "$(git status --porcelain -- audit)"
+
+      - name: Counts ratchet
+        if: github.event_name == 'pull_request'
+        run: |
+          if git show "origin/${{ github.base_ref }}:audit/counts.tsv" > "$RUNNER_TEMP/base-counts.tsv" 2>/dev/null; then
+            python3 audit/ledger.py ratchet "$RUNNER_TEMP/base-counts.tsv"
+          else
+            echo "No audit/counts.tsv on ${{ github.base_ref }}; ratchet baseline starts with this PR."
+          fi
+
+      - name: Audit gate self-test
+        run: opam exec -- make test-ledger

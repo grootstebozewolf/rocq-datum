@@ -1,0 +1,3 @@
+# Datum audit ledger source. Hand-written; see audit/ledger.py for the format.
+# name	level	kind	repairs
+Datum.Ledger.Core.refutes	Micro	QED	-
