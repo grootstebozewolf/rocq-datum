@@ -1,0 +1,4 @@
+Datum.Ledger.Core.refutes	Micro	QED	-
+Datum.Fixture.double_even	Micro	QED	-
+Datum.Fixture.all_even_cex	Micro	QEX	-
+Datum.Fixture.all_zero_cex	Meso	QEX	open

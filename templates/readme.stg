@@ -1,0 +1,40 @@
+// README.md.  Rendered by tools/st4/Render.java from audit/ledger.tsv.
+// Edit this template, not README.md.
+
+main(m) ::= <<
+<!-- GENERATED from $m.source$ by tools/st4/Render.java and templates/readme.stg. Do not edit; edit the template. -->
+# rocq-datum
+
+Foundational Rocq lemmas for verified computational geometry: pure-ℝ facts, ℝ↔floating-point bridges, and rounding-error bounds.
+
+```coq
+From Datum Require Import Real.Base.
+```
+
+## Ledger
+
+$length(m.qed)$ QED (positive results) · $length(m.qex)$ QEX (Qed-closed counterexamples, $length(m.open)$ open).
+Per-level counts, tiers and assumptions: [`audit/LEDGER.md`](audit/LEDGER.md).
+All figures are generated from [`audit/ledger.tsv`](audit/ledger.tsv).
+
+## Assumptions
+
+Importing `Stdlib.Reals` brings four axioms into the closure:
+
+- `Stdlib.Logic.Classical_Prop.classic`
+- `Stdlib.Reals.ClassicalDedekindReals.sig_forall_dec`
+- `Stdlib.Reals.ClassicalDedekindReals.sig_not_dec`
+- `Stdlib.Logic.FunctionalExtensionality.functional_extensionality_dep`
+
+This is a fact about the import closure, not a choice made by Datum (checked with `rocqchk -o Stdlib.Reals.Reals` on Rocq 9.0.0, rocq-stdlib 9.1.0). Per-theorem assumptions are reported per ledger entry (`Print Assumptions`), with tiers:
+
+- **Tier 0**: closed under the global context.
+- **Tier 1**: only the Reals construction axioms in `audit/allowlist.txt`.
+- **Tier 2**: additionally an axiom registered for that theorem in `audit/exceptions.tsv` (intended for `classic`). Never allowed for QEX entries.
+
+## Audit
+
+- `audit/ledger.src`: hand-written ledger rows (`name level kind repairs`).
+- `make audit`: kernel-checks the ledger via the generated `audit/Ledger.v` (QEX entries must inhabit `Datum.Ledger.Core.Counterexample`; repairs must be QED rows), applies the tier policy, writes `audit/ledger.tsv`, and renders `audit/LEDGER.md` and this README with StringTemplate 4 (`templates/*.stg`).
+- `make test-ledger`: self-test of the audit gates (`tests/ledger/`).
+>>
