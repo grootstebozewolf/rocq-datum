@@ -1,7 +1,7 @@
 opam-version: "2.0"
 name: "rocq-datum"
 synopsis: "Foundational real and floating-point lemmas for verified geometry"
-maintainer: "Jeroen Bloemscheer"
+maintainer: "Jeroen Bloemscheer <jeroen@jeroentechsolutions.uk>"
 license: "BSD-3-Clause"
 homepage: "https://github.com/grootstebozewolf/rocq-datum"
 build: [make "-j%{jobs}%"]
