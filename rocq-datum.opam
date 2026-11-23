@@ -7,6 +7,6 @@ homepage: "https://github.com/grootstebozewolf/rocq-datum"
 build: [make "-j%{jobs}%"]
 install: [make "install"]
 depends: [
-  "rocq-core" {>= "9.0"}
-  "rocq-stdlib"
+  "rocq-core" {>= "9.2"}
+  "rocq-stdlib" {>= "9.2"}
 ]
