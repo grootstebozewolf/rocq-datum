@@ -1,3 +1,27 @@
 # Datum audit ledger source. Hand-written; see audit/ledger.py for the format.
 # name	level	kind	repairs
 Datum.Ledger.Core.refutes	Micro	QED	-
+Datum.Geometry.RiemannSphere.norm2_nonneg	Micro	QED	-
+Datum.Geometry.RiemannSphere.norm2_zero	Micro	QED	-
+Datum.Geometry.RiemannSphere.unstereo_denom_pos	Micro	QED	-
+Datum.Geometry.RiemannSphere.north_on_sphere	Micro	QED	-
+Datum.Geometry.RiemannSphere.sphere_top_is_north	Micro	QED	-
+Datum.Geometry.RiemannSphere.unstereo_on_sphere	Meso	QED	-
+Datum.Geometry.RiemannSphere.stereo_unstereo	Meso	QED	-
+Datum.Geometry.RiemannSphere.unstereo_stereo	Meso	QED	-
+Datum.Geometry.RiemannSphere.riemann_sphere	Macro	QED	-
+Datum.Geometry.RiemannSphere.unstereo_injective	Meso	QED	-
+Datum.Geometry.RiemannSphere.stereo_injective_on_sphere	Meso	QED	-
+Datum.Geometry.RiemannSphere.stereo_north	Micro	QED	-
+Datum.Geometry.RiemannSphere.unstereo_zero	Micro	QED	-
+Datum.Geometry.RiemannSphere.stereo_finite_iff	Meso	QED	-
+Datum.Geometry.RiemannSphere.stereo_not_always_finite	Meso	QEX	Datum.Geometry.RiemannSphere.stereo_finite_iff
+Datum.Geometry.RiemannSphere.chordal_fin	Meso	QED	-
+Datum.Geometry.RiemannSphere.chordal_inf	Meso	QED	-
+Datum.Geometry.RiemannSphere.unstereo_recip	Meso	QED	-
+Datum.Geometry.RiemannSphere.unstereo_antipode	Meso	QED	-
+Datum.Geometry.RiemannSphere.rot_x_involutive	Micro	QED	-
+Datum.Geometry.RiemannSphere.neg_involutive	Micro	QED	-
+Datum.Geometry.RiemannSphere.recip_involutive	Meso	QED	-
+Datum.Geometry.RiemannSphere.antipode_involutive	Meso	QED	-
+Datum.Geometry.RiemannSphere.antipode_no_fixed_point	Meso	QED	-

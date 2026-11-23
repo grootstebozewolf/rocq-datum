@@ -9,7 +9,7 @@ From Datum Require Import Real.Base.
 
 ## Ledger
 
-1 QED (positive results) · 0 QEX (Qed-closed counterexamples, 0 open).
+24 QED (positive results) · 1 QEX (Qed-closed counterexamples, 0 open).
 Per-level counts, tiers and assumptions: [`audit/LEDGER.md`](audit/LEDGER.md).
 All figures are generated from [`audit/ledger.tsv`](audit/ledger.tsv).
 

@@ -24,10 +24,14 @@ for case in "$here"/cases/*/; do
   name=$(basename "$case")
   expect=$(cat "$case/expect")
   tmp=$(mktemp -d)
-  cp -r "$root/theories" "$root/audit" "$root/templates" "$root/tools" "$root/_CoqProject" "$root/Makefile" "$tmp/"
+  cp -r "$root/audit" "$root/templates" "$root/tools" "$root/Makefile" "$tmp/"
   rm -rf "$tmp/audit/_out"
+  # Fixtures see only the ledger types, not the rest of the library, so
+  # adding theories does not invalidate the fixture ledgers.
+  mkdir -p "$tmp/theories"
+  cp -r "$root/theories/Ledger" "$tmp/theories/"
   cp "$case/Fixture.v" "$tmp/theories/Fixture.v"
-  echo "theories/Fixture.v" >> "$tmp/_CoqProject"
+  printf '%s\n' "-R theories Datum" "theories/Ledger/Core.v" "theories/Fixture.v" > "$tmp/_CoqProject"
   cp "$case/ledger.src" "$tmp/audit/ledger.src"
   if [ -f "$case/exceptions.tsv" ]; then
     cp "$case/exceptions.tsv" "$tmp/audit/exceptions.tsv"
