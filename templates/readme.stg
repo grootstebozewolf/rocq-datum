@@ -26,7 +26,7 @@ Importing `Stdlib.Reals` brings four axioms into the closure:
 - `Stdlib.Reals.ClassicalDedekindReals.sig_not_dec`
 - `Stdlib.Logic.FunctionalExtensionality.functional_extensionality_dep`
 
-This is a fact about the import closure, not a choice made by Datum (checked with `rocqchk -o Stdlib.Reals.Reals` on Rocq 9.0.0, rocq-stdlib 9.1.0). Per-theorem assumptions are reported per ledger entry (`Print Assumptions`), with tiers:
+This is a fact about the import closure, not a choice made by Datum (checked with `rocqchk -o Stdlib.Reals.Reals` on Rocq 9.2.0, rocq-stdlib 9.2.0). Per-theorem assumptions are reported per ledger entry (`Print Assumptions`), with tiers:
 
 - **Tier 0**: closed under the global context.
 - **Tier 1**: only the Reals construction axioms in `audit/allowlist.txt`.

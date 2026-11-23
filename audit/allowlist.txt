@@ -3,7 +3,7 @@
 # a QED theorem may use it only through an "axiom" row in
 # audit/exceptions.tsv (Tier 2), and a QEX entry never.
 #
-# rocqchk -o Stdlib.Reals.Reals (Rocq 9.0.0, rocq-stdlib 9.1.0) reports
+# rocqchk -o Stdlib.Reals.Reals (Rocq 9.2.0, rocq-stdlib 9.2.0) reports
 # exactly these three plus Stdlib.Logic.Classical_Prop.classic.
 ClassicalDedekindReals.sig_forall_dec
 ClassicalDedekindReals.sig_not_dec
